@@ -1,0 +1,22 @@
+name: Gilded Rose Build and Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Dependencies
+        working-directory: ./js-jest
+        run: npm install
+        
+      - name: Run Tests
+        working-directory: ./js-jest
+        run: npm test
