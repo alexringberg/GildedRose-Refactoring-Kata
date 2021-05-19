@@ -2,7 +2,7 @@ const {handleQualityUpdate} = require("../src/handle_quality_update");
 const {isTicket, isCheese, isLegendary} = require("../src/item_checker");
 const {Shop, Item} = require("../src/gilded_rose");
 
-describe("updateQuality", () => {
+describe("UpdateQuality", () => {
   it("should not update sellin or quality if name doesn't match any categories", () => {
     const gildedRose = new Shop([new Item("foo", 0, 0)]);
 
@@ -177,6 +177,14 @@ describe("Quality Updater", () => {
     expect(response).toBe(0);
   });
 
+  it("should decrease quality by 1 if sellin is greater than 10 for Ticket", () => {
+    const gildedRose = new Item("Backstage passes to a TAFKAL80ETC concert", 11, 50);
+
+    const response = handleQualityUpdate(gildedRose);
+
+    expect(response).toBe(49);
+  })
+
   it("should keep same quality if legendary", () => {
     const gildedRose = new Item("Sulfuras, Hand of Ragnaros", 1, 80);
 
@@ -192,4 +200,38 @@ describe("Quality Updater", () => {
 
     expect(response).toBe(80);
   });
+
+  it("should decrease quality twice as fast if sellin is 0 and item is Conjured", () => {
+    const gildedRose = new Item("Conjured", 0, 4);
+
+    const response = handleQualityUpdate(gildedRose);
+
+    expect(response).toBe(0);
+  });
+
+  it("should decrease quality by 2 if sellin is not 0 and item is Conjured", () => {
+    const gildedRose = new Item("Conjured", 1, 4);
+
+    const response = handleQualityUpdate(gildedRose);
+
+    expect(response).toBe(2);
+  });
+
+  it("should return 0 if quality would be set to anything below 0", () => {
+    const gildedRose = new Item("Conjured", 0, 2);
+
+    const response = handleQualityUpdate(gildedRose);
+
+    expect(response).toBe(0);
+  });
+
+  it("should return 50 if quality would be set to anything above 50", () => {
+    const gildedRose = new Item("Backstage passes to a TAFKAL80ETC concert", 1, 49);
+
+    const response = handleQualityUpdate(gildedRose);
+
+    expect(response).toBe(50);
+  });
+
+
 })
