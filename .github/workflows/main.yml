@@ -20,10 +20,3 @@ jobs:
       - name: Run Tests
         working-directory: ./js-jest
         run: npm test
-      
-      - name: Jest Coverage Commenter + edit
-        uses: k-chunghwan/jest-coverage-action@v1.1.2_rc
-        with:
-          github_token: "${{ secrets.GITHUB_TOKEN }}"
-          test_command: "npm jest --coverage"
-
